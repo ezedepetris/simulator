@@ -1,68 +1,65 @@
 #include <stdio.h>
+#include <stdlib.h>
+
 
 float clock;
 int number_server;
 
-struct event{
+typedef struct ev{
 	// structure for a single event
 	float in;
 	float out;
 	float services;
 	char* name;
-};
+}event;
 
-struct next_event{
+typedef struct next_ev{
 	// structure for a single event
 	int in_out; //0 if is a input event; 1 if is an output event
 	event next;
-};
+}next_event;
 
 event pe[10]; // list with events for model an event with her in/out time
 event events[10]; //list of initial events
 
-struct queue{ // queue of events waiting for a server
+typedef struct q{ // queue of events waiting for a server
 	event my_event;
-	struct queue* next;
+	q* next;
+}queue;
+
+int is_empty(queue* q){
+	return (q == NULL) ? 0: 1;
 }
 
-void enqueue (queue q, event e, queue last){
-	queue last_item;
-	last_item.my_event = e;
-	last_item.next = nil;
-	last.next = last_item;
+void enqueue (queue* q, event e, queue* last){
+	queue *last_item;
+	last_item = (queue *) malloc(sizeof(queue));
+	last_item -> my_event = e;
+	last_item -> next = NULL;
+	last -> next = last_item;
 }
 
-event desenqueue(queue q){
-	if(is_empty(q) != 0)
-		return nil;
-	else{
-		event aux = q.my_event;
-		q = q.next;
-		return aux;
-	}
+event desenqueue(queue* q){
+	event aux = q -> my_event;
+	q = q -> next;
+	return aux;
 }
 
-int is_empty(queue q){
-	(queue = nil)? return 0 : return 1;
-}
-
-
-
-void input(event events_aux*){
+void input(event* events_aux){
 	// do all thing when arrive an event (move the event to the server or move the event at queue if the server is full)
 
 }
 
 void output(event pe, queue q){
 	// less 1 the server list if the queue is empty or put the next event of the queue to the server
-	if (is)
-	{
-		/* code */
-	}
+	// if ()
+	// {
+	// 	 code
+	// }
 }
 
-next_event get_next_event(event pe_aux*){
-	/*return minimal time beetwen input event and output event*/)?/*(0,event)*/:/*(1,event) */
+next_event get_next_event(event* pe_aux){
+	/*return minimal time beetwen input event and output event*//*(0,event)*//*(1,event) */
 	// return the minimal time beetwen input event and output event of pe array
 	//(pe_aux[0]>pe_aux[1])? return pe_aux[1] : return pe_aux[0];
 	next_event my_record;
@@ -87,20 +84,27 @@ void report(){
 
 }
 
+int end_simulation(){
+	return (1==2)? 0: 1;
+}
+
 void simulate(){
 	// initialize all variables
+	next_event aux = get_next_event(pe);
+	int value =  aux.in_out;
 	while(end_simulation() != 1){
-		switch next_event do {
-			case
+		switch (value){
+			case 0 :
+				break;
+			case 1 :
+				break;
+
 		}
 	}
 }
 
-int end_simulation(){
-	(/* condition */)? return 0: return 1;
-}
 
 int main(int argc, char const *argv[]){
-	simulate()
+	simulate();
 	return 0;
 }
