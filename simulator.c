@@ -23,17 +23,29 @@ event events[10]; //list of initial events
 struct queue{ // queue of events waiting for a server
 	event my_event;
 	struct queue* next;
-	struct queue* last;
 }
 
-struct last_item{
-	struct queue* last;
-
+void enqueue (queue q, event e, queue last){
+	queue last_item;
+	last_item.my_event = e;
+	last_item.next = nil;
+	last.next = last_item;
 }
 
-void enqueue (queue q, event e,){
-
+event desenqueue(queue q){
+	if(is_empty(q) != 0)
+		return nil;
+	else{
+		event aux = q.my_event;
+		q = q.next;
+		return aux;
+	}
 }
+
+int is_empty(queue q){
+	(queue = nil)? return 0 : return 1;
+}
+
 
 
 void input(event events_aux*){
@@ -41,9 +53,9 @@ void input(event events_aux*){
 
 }
 
-void output(event events_aux*){
+void output(event pe, queue q){
 	// less 1 the server list if the queue is empty or put the next event of the queue to the server
-	if (queue[0]==nil)
+	if (is)
 	{
 		/* code */
 	}
