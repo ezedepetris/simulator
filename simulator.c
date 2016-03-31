@@ -13,37 +13,132 @@ typedef struct ev{
 	char* name;
 }event;
 
-typedef struct next_ev{
-	// structure for a single event
+
+// <List class="List-of-next-event">
+
+typedef struct next_ev{ // structure for a single event
 	int in_out; //0 if is a input event; 1 if is an output event
 	event next;
 }next_event;
 
+typedef struct N{
+	next_event info;
+	N* next;
+}NodeNE;
+
+typedef struct L { // queue of events waiting for a server
+	int lenght;
+	NodeNE* node;
+}List;
+
+// </List>
+
+
+
+// <Queue class="Waiting-server">
+
+typedef struct N{
+	event info;
+	N* next;
+}Node;
+
+typedef struct Q { // queue of events waiting for a server
+	int lenght;
+	Node* node;
+}Queue;
+
+// </Queue>
+
+
+
+
 event pe[10]; // list with events for model an event with her in/out time
 event events[10]; //list of initial events
 
-typedef struct q{ // queue of events waiting for a server
-	event my_event;
-	q* next;
-}queue;
+// int is_empty(queue* q){
+// 	return (q == NULL) ? 0: 1;
+// }
 
-int is_empty(queue* q){
-	return (q == NULL) ? 0: 1;
+// void enqueue (queue* q, event e, queue* last){
+// 	queue *last_item;
+// 	last_item = (queue *) malloc(sizeof(queue));
+// 	last_item -> my_event = e;
+// 	last_item -> next = NULL;
+// 	last -> next = last_item;
+// }
+
+// event desenqueue(queue* q){
+// 	event aux = q -> my_event;
+// 	q = q -> next;
+// 	return aux;
+// }
+
+
+
+
+
+// Method of Queue
+
+void enqueue (Queue* q, int ele){
+	Node *aux;
+	aux = (Node *) malloc(sizeof(Node));
+	aux->info = ele;
+	if (q->lenght == 0){
+		aux->next = NULL;
+	}else{
+		aux->next =q->node;
+	}
+	q->node = aux;
+	q->lenght++;
 }
 
-void enqueue (queue* q, event e, queue* last){
-	queue *last_item;
-	last_item = (queue *) malloc(sizeof(queue));
-	last_item -> my_event = e;
-	last_item -> next = NULL;
-	last -> next = last_item;
+int dequeue(Queue* q){
+	int aux_info;
+	Node *aux = q->node;
+	Node *destroyed;
+
+	if (q->lenght == 1){
+		aux_info = aux->info;
+		q->node = NULL;
+		q->lenght = 0;
+		free(aux);	
+	}
+
+	if(q->lenght > 1){
+		while(aux->next->next != NULL){
+			aux = aux->next;
+		}
+		destroyed = aux->next;
+		aux->next = NULL;
+		aux_info = destroyed->info;
+		q->lenght--;
+		free(destroyed);
+		
+	}
+	return  aux_info;
 }
 
-event desenqueue(queue* q){
-	event aux = q -> my_event;
-	q = q -> next;
-	return aux;
+void show (Queue* q){
+	Node *aux = q->node;
+	if (aux != NULL)
+		while(aux->next != NULL){
+			printf("%d\n",aux->info);
+			aux = aux->next;
+		}
+		printf("%d\n",aux->info);
 }
+
+int is_empty(Queue* q){
+	return	(q->lenght == 0)? 0 : 1;
+}
+
+
+// End of Method od Queue
+
+
+// Method of Lsist
+
+// End of Method of Lsist
 
 void input(event* events_aux){
 	// do all thing when arrive an event (move the event to the server or move the event at queue if the server is full)
