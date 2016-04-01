@@ -116,41 +116,60 @@ int is_empty_q(Queue* q){
 
 
 // Method of Lsist
-void insert (List* l, Event ele){
-	NodeNE *aux;
-	aux = (NodeNE *) malloc(sizeof(NodeNE));
-	aux->info = ele;
-	if (l->lenght == 0){
-		aux->next = NULL;
-	}else{
-		aux->next =l->node;
+void insert (List* l, Event ele, int in_out){
+	/*
+		in_out == 0 (is an in event)
+		in_out == 1 (is an out event)
+	*/
+	if (in_out == 0){
+		printf("HASTA ACA FUNCIONO 00000\n");
+		l->in = ele;
 	}
-	l->node = aux;
-	l->lenght++;
+
+
+	if (in_out == 1){
+		NodeNE *aux;
+		aux = (NodeNE *) malloc(sizeof(NodeNE));
+		aux->info = ele;
+
+		NodeNE *walker;
+		walker = l->node;
+
+		if (l->lenght == 0){
+			aux->next = NULL;
+			l->node = aux;
+		}else{
+
+			if (ele.out < (walker->info).out){
+				aux->next = walker;
+				l->node = aux;
+			}else{
+
+				while(ele.out > (walker->info).out && walker->next != NULL){
+					walker = walker->next;
+				}
+
+				aux->next = walker->next;
+				walker->next = aux;
+			}
+		}
+		l->lenght++;
+	}
 }
 
-Event del(List* l){
+Event del (List* l){
 	Event aux_info;
+
 	NodeNE *aux = l->node;
+
 	NodeNE *destroyed;
 
-	if (l->lenght == 1){
+	if((l->in).in < (aux->info).out)
+		aux_info = l->in;
+	else{
 		aux_info = aux->info;
-		l->node = NULL;
-		l->lenght = 0;
+		l->node = (l->node)->next;
 		free(aux);
-	}
-
-	if(l->lenght > 1){
-		while(aux->next->next != NULL){
-			aux = aux->next;
-		}
-		destroyed = aux->next;
-		aux->next = NULL;
-		aux_info = destroyed->info;
-		l->lenght--;
-		free(destroyed);
-
 	}
 	return  aux_info;
 }
@@ -159,13 +178,13 @@ void show_l (List* l){
 	NodeNE *aux = l->node;
 	if (aux != NULL)
 		while(aux->next != NULL){
-			// printf("%d\n",aux->info);
+			printf("%f \n",(aux->info).out);
 			aux = aux->next;
 		}
-		// printf("%d\n",aux->info);
+		printf("%f \n",(aux->info).out);
 }
 
-int is_empty_l(List* l){
+int is_empty_l (List* l){
 	return	(l->lenght == 0)? 0 : 1;
 }
 // End of Method of Lsist
