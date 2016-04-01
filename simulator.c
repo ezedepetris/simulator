@@ -80,7 +80,7 @@ Event dequeue(Queue* q){
 		aux_info = aux->info;
 		q->node = NULL;
 		q->lenght = 0;
-		free(aux);	
+		free(aux);
 	}
 
 	if(q->lenght > 1){
@@ -92,7 +92,7 @@ Event dequeue(Queue* q){
 		aux_info = destroyed->info;
 		q->lenght--;
 		free(destroyed);
-		
+
 	}
 	return  aux_info;
 }
@@ -138,7 +138,7 @@ Event del(List* l){
 		aux_info = aux->info;
 		l->node = NULL;
 		l->lenght = 0;
-		free(aux);	
+		free(aux);
 	}
 
 	if(l->lenght > 1){
@@ -150,7 +150,7 @@ Event del(List* l){
 		aux_info = destroyed->info;
 		l->lenght--;
 		free(destroyed);
-		
+
 	}
 	return  aux_info;
 }
@@ -170,17 +170,29 @@ int is_empty_l(List* l){
 }
 // End of Method of Lsist
 
-void input (){
+void input (Queue* queue, Event e, List* list){
 	// do all thing when arrive an event (move the event to the server or move the event at queue if the server is full)
-
+	if (number_server == 0){
+		enqueue(queue, e);
+	}
+	else{
+		number_server--;
+		e.out = clock + e.services;
+		insert(list, e, 1);
+	}
 }
 
-void output (){
+void output (Queue* queue, List* list){
 	// less 1 the server list if the queue is empty or put the next event of the queue to the server
-	// if ()
-	// {
-	// 	 code
-	// }
+	if (is_empty_q(queue) == 1){
+		Event e;
+		e = dequeue(queue);
+		e.out = clock + e.services;
+		insert(list, e, 1);
+	}
+	else{
+		number_server++;
+	}
 }
 
 Event get_next_event(Event* pe_aux){
@@ -188,7 +200,7 @@ Event get_next_event(Event* pe_aux){
 	// return the minimal time beetwen input event and output event of pe array
 	//(pe_aux[0]>pe_aux[1])? return pe_aux[1] : return pe_aux[0];
 	Event my_record;
-	
+
 	return my_record;
 }
 
@@ -218,7 +230,7 @@ void simulate(){
 	list->lenght = 0;
 
 	// initialize all variables
-	
+
 }
 
 
