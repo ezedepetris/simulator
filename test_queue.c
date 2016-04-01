@@ -33,7 +33,7 @@ int dequeue(Queue* q){
 		aux_info = aux->info;
 		q->node = NULL;
 		q->lenght = 0;
-		free(aux);	
+		free(aux);
 	}
 
 	if(q->lenght > 1){
@@ -45,7 +45,7 @@ int dequeue(Queue* q){
 		aux_info = destroyed->info;
 		q->lenght--;
 		free(destroyed);
-		
+
 	}
 	return  aux_info;
 }
