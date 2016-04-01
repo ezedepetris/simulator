@@ -11,24 +11,20 @@ typedef struct ev{
 	float out;
 	float services;
 	char* name;
-}event;
+}Event;
 
 
 // <List class="List-of-next-event">
 
-typedef struct next_ev{ // structure for a single event
-	int in_out; //0 if is a input event; 1 if is an output event
-	event next;
-}next_event;
-
-typedef struct N{
-	next_event info;
-	N* next;
+typedef struct N_L{
+	Event info;
+	N_L* next;
 }NodeNE;
 
 typedef struct L { // queue of events waiting for a server
 	int lenght;
-	NodeNE* node;
+	NodeNE* node; //list of out event
+	Event in;	//represente the in event
 }List;
 
 // </List>
@@ -37,9 +33,9 @@ typedef struct L { // queue of events waiting for a server
 
 // <Queue class="Waiting-server">
 
-typedef struct N{
-	event info;
-	N* next;
+typedef struct N_Q{
+	Event info;
+	N_Q* next;
 }Node;
 
 typedef struct Q { // queue of events waiting for a server
@@ -52,26 +48,9 @@ typedef struct Q { // queue of events waiting for a server
 
 
 
-event pe[10]; // list with events for model an event with her in/out time
-event events[10]; //list of initial events
+Event pe[10]; // list with events for model an event with her in/out time
+Event events[10]; //list of initial events
 
-// int is_empty(queue* q){
-// 	return (q == NULL) ? 0: 1;
-// }
-
-// void enqueue (queue* q, event e, queue* last){
-// 	queue *last_item;
-// 	last_item = (queue *) malloc(sizeof(queue));
-// 	last_item -> my_event = e;
-// 	last_item -> next = NULL;
-// 	last -> next = last_item;
-// }
-
-// event desenqueue(queue* q){
-// 	event aux = q -> my_event;
-// 	q = q -> next;
-// 	return aux;
-// }
 
 
 
@@ -79,7 +58,7 @@ event events[10]; //list of initial events
 
 // Method of Queue
 
-void enqueue (Queue* q, int ele){
+void enqueue (Queue* q, Event ele){
 	Node *aux;
 	aux = (Node *) malloc(sizeof(Node));
 	aux->info = ele;
@@ -92,8 +71,8 @@ void enqueue (Queue* q, int ele){
 	q->lenght++;
 }
 
-int dequeue(Queue* q){
-	int aux_info;
+Event dequeue(Queue* q){
+	Event aux_info;
 	Node *aux = q->node;
 	Node *destroyed;
 
@@ -118,17 +97,17 @@ int dequeue(Queue* q){
 	return  aux_info;
 }
 
-void show (Queue* q){
+void show_q (Queue* q){
 	Node *aux = q->node;
 	if (aux != NULL)
 		while(aux->next != NULL){
-			printf("%d\n",aux->info);
+			// printf("%d\n",aux->info);
 			aux = aux->next;
 		}
-		printf("%d\n",aux->info);
+		// printf("%d\n",aux->info);
 }
 
-int is_empty(Queue* q){
+int is_empty_q(Queue* q){
 	return	(q->lenght == 0)? 0 : 1;
 }
 
@@ -137,15 +116,66 @@ int is_empty(Queue* q){
 
 
 // Method of Lsist
+void insert (List* l, Event ele){
+	NodeNE *aux;
+	aux = (NodeNE *) malloc(sizeof(NodeNE));
+	aux->info = ele;
+	if (l->lenght == 0){
+		aux->next = NULL;
+	}else{
+		aux->next =l->node;
+	}
+	l->node = aux;
+	l->lenght++;
+}
 
+Event del(List* l){
+	Event aux_info;
+	NodeNE *aux = l->node;
+	NodeNE *destroyed;
+
+	if (l->lenght == 1){
+		aux_info = aux->info;
+		l->node = NULL;
+		l->lenght = 0;
+		free(aux);	
+	}
+
+	if(l->lenght > 1){
+		while(aux->next->next != NULL){
+			aux = aux->next;
+		}
+		destroyed = aux->next;
+		aux->next = NULL;
+		aux_info = destroyed->info;
+		l->lenght--;
+		free(destroyed);
+		
+	}
+	return  aux_info;
+}
+
+void show_l (List* l){
+	NodeNE *aux = l->node;
+	if (aux != NULL)
+		while(aux->next != NULL){
+			// printf("%d\n",aux->info);
+			aux = aux->next;
+		}
+		// printf("%d\n",aux->info);
+}
+
+int is_empty_l(List* l){
+	return	(l->lenght == 0)? 0 : 1;
+}
 // End of Method of Lsist
 
-void input(event* events_aux){
+void input (){
 	// do all thing when arrive an event (move the event to the server or move the event at queue if the server is full)
 
 }
 
-void output(event pe, queue q){
+void output (){
 	// less 1 the server list if the queue is empty or put the next event of the queue to the server
 	// if ()
 	// {
@@ -153,19 +183,12 @@ void output(event pe, queue q){
 	// }
 }
 
-next_event get_next_event(event* pe_aux){
+Event get_next_event(Event* pe_aux){
 	/*return minimal time beetwen input event and output event*//*(0,event)*//*(1,event) */
 	// return the minimal time beetwen input event and output event of pe array
 	//(pe_aux[0]>pe_aux[1])? return pe_aux[1] : return pe_aux[0];
-	next_event my_record;
-	if (pe_aux[0].in > pe_aux[1].out){
-		my_record.in_out = 1;
-		my_record.next = pe_aux[1];
-	}
-	else{
-		my_record.in_out = 0;
-		my_record.next = pe_aux[0];
-	}
+	Event my_record;
+	
 	return my_record;
 }
 
@@ -184,18 +207,18 @@ int end_simulation(){
 }
 
 void simulate(){
-	// initialize all variables
-	next_event aux = get_next_event(pe);
-	int value =  aux.in_out;
-	while(end_simulation() != 1){
-		switch (value){
-			case 0 :
-				break;
-			case 1 :
-				break;
+	// initialize Queue
+	Queue *queue;
+	queue = (Queue*) malloc(sizeof(Queue));
+	queue->lenght = 0;
 
-		}
-	}
+	// initialize List
+	List *list;
+	list = (List*) malloc(sizeof(List));
+	list->lenght = 0;
+
+	// initialize all variables
+	
 }
 
 
