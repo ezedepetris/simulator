@@ -112,7 +112,7 @@ int is_empty_q(Queue* q){
 }
 
 
-// End of Method od Queue
+// End of Method of Queue
 
 
 // Method of Lsist
@@ -234,7 +234,7 @@ void report(){
 }
 
 int end_simulation(){
-	return (1==2)? 0: 1;
+	return (is_empty_q()==0 &&  is_empty_l()==0)? 0: 1;
 }
 
 void simulate(){
@@ -250,6 +250,10 @@ void simulate(){
 
 	// initialize all variables
 
+	while(end_simulation() == 1){//not end simulation
+		Event e = del(list);
+		(e.out == -1)? input(queue, e, list): output(queue, list);
+	}
 }
 
 
