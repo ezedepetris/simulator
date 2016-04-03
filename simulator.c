@@ -49,7 +49,7 @@ typedef struct Q { // queue of events waiting for a server
 
 
 Event pe[10]; // list with events for model an event with her in/out time
-Event events[10]; //list of initial events
+Event array_events[10]; //list of initial events
 
 
 
@@ -118,11 +118,10 @@ int is_empty_q(Queue* q){
 // Method of Lsist
 void insert (List* l, Event ele, int in_out){
 	/*
-		in_out == 0 (is an in event)
-		in_out == 1 (is an out event)
+		in_out == 0 (is an in-put event)
+		in_out == 1 (is an out-put event)
 	*/
 	if (in_out == 0){
-		printf("HASTA ACA FUNCIONO 00000\n");
 		l->in = ele;
 	}
 
@@ -233,8 +232,8 @@ void report(){
 
 }
 
-int end_simulation(){
-	return (is_empty_q()==0 &&  is_empty_l()==0)? 0: 1;
+int end_simulation(Queue* q, List* l){
+	return (is_empty_q(q)==0 &&  is_empty_l(l)==0)? 0: 1;
 }
 
 void simulate(){
@@ -249,15 +248,30 @@ void simulate(){
 	list->lenght = 0;
 
 	// initialize all variables
+	number_server = 3;
+	int i = 0;
+	Event e = array_events[i];
+	insert(list, e, 0);
 
-	while(end_simulation() == 1){//not end simulation
-		Event e = del(list);
-		(e.out == -1)? input(queue, e, list): output(queue, list);
+	while(end_simulation(queue, list) == 1){//not end simulation
+		e = del(list);
+
+		if (e.out == 0){
+			clock = clock + e.in;
+			input(queue, e, list);
+			i++;
+			insert(list, array_events[i], 0);
+		}
+		else{
+			clock = e.out;
+			output(queue, list);
+		}
 	}
 }
 
 
 int main(int argc, char const *argv[]){
+
 	simulate();
 	return 0;
 }
