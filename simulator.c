@@ -138,13 +138,30 @@ void insert (List* l, Event ele, int in_out){
 			aux->next = NULL;
 			l->node = aux;
 		}else{
+			int flag = 0;
 
 			if (ele.out < (walker->info).out){
 				aux->next = walker;
 				l->node = aux;
-			}else{
+				flag--;
+			}
 
-				while(ele.out > (walker->info).out && walker->next != NULL){
+			if(ele.out > (walker->info).out && flag == 0){
+				if(walker->next == NULL){
+					walker->next = aux;
+					aux->next = NULL;
+					flag--;
+				}
+
+				if((walker->next)->info.out > ele.out){
+					aux->next = walker->next;
+					walker->next = aux;
+					flag--;
+				}
+
+			}
+			if(flag == 0){
+				while(ele.out > (walker->info).out && walker->next != NULL ){
 					walker = walker->next;
 				}
 
@@ -192,12 +209,14 @@ Event del (List* l){
 
 void show_l (List* l){
 	NodeNE *aux = l->node;
-	if (aux != NULL)
-		while(aux->next != NULL){
-			printf("%f \n",(aux->info).out);
+	if(l->lenght == 0){
+		printf("Evento de entrada timer: %f\n", (l->in).in);
+	}else{
+		while(aux != NULL){
+			printf("Evento de salida timer: %f\n", (aux->info).out);
 			aux = aux->next;
 		}
-		printf("%f \n",(aux->info).out);
+	}
 }
 
 int is_empty_l (List* l){
@@ -266,16 +285,21 @@ void simulate(float timer){
 
 	while(end_simulation(queue, list) != 0){//not end simulation
 		e = del(list);
+		show_l(list);
+		printf("\n");
+		printf("\n");
+		printf("\n");
+		printf("\n");
 
 		if (e.out == -1){
-			printf("Clock = %f      Soy un evento de Entrada\n", timer );
+			// printf("Clock = %f      Soy un evento de Entrada\n", timer );
 			timer = timer + e.in;
 			input(queue, e, list,timer);
 			i++;
 			insert(list, array_events[i], 0);
 		}
 		else{
-			printf("Clock = %f      Soy un evento de Salida\n", timer );
+			// printf("Clock = %f      Soy un evento de Salida\n", timer );
 			timer = e.out;
 			output(queue, list,timer);
 		}
