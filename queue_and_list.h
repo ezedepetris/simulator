@@ -181,12 +181,14 @@ Event del (List* l){
 
 void show_l (List* l){
   NodeNE *aux = l->node;
-  if (aux != NULL)
-    while(aux->next != NULL){
-      printf("%f \n",(aux->info).out);
+  if(l->lenght == 0){
+    printf("Evento de entrada timer: %f\n", (l->in).in);
+  }else{
+    while(aux != NULL){
+      printf("Evento de salida timer: %f\n", (aux->info).out);
       aux = aux->next;
     }
-    printf("%f \n",(aux->info).out);
+  }
 }
 
 int is_empty_l (List* l){

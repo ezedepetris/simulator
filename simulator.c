@@ -63,14 +63,14 @@ void simulate(float timer){
 	list->in = a;
 
 	// initialize all variables
-	number_server = 3;
+	number_server = 1;
 	int i = 0;
 	Event e = array_events[i];
 	insert(list, e, 0);
 
 	while(end_simulation(queue, list) != 0){//not end simulation
-		e = del(list);
 		show_l(list);
+		e = del(list);
 		printf("\n");
 		printf("\n");
 		printf("\n");
@@ -97,53 +97,53 @@ int main(int argc, char const *argv[]){
 
 	test.in = 1;
 	test.out = -1;
-	test.services = 2;
+	test.services = 2.5;
 	array_events[0] = test;
 
 	test.in = 2;
 	test.out = -1;
-	test.services = 3.4;
+	test.services = 3;
 	array_events[1] = test;
-
-	test.in = 3;
-	test.out = -1;
-	test.services = 1;
-	array_events[2] = test;
 
 	test.in = 4;
 	test.out = -1;
-	test.services = 2.5;
-	array_events[3] = test;
+	test.services = 2.3;
+	array_events[2] = test;
 
 	test.in = 5;
 	test.out = -1;
-	test.services = 2;
-	array_events[4] = test;
-
-	test.in = 6;
-	test.out = -1;
-	test.services = 6;
-	array_events[5] = test;
+	test.services = 1.8;
+	array_events[3] = test;
 
 	test.in = 7;
 	test.out = -1;
-	test.services = 5.4;
-	array_events[6] = test;
-
-	test.in = 8;
-	test.out = -1;
-	test.services = 3;
-	array_events[7] = test;
-
-	test.in = 9;
-	test.out = -1;
-	test.services = 9;
-	array_events[8] = test;
-
-	test.in = 10;
-	test.out = -1;
 	test.services = 1;
-	array_events[9] = test;
+	array_events[4] = test;
+
+	test.in = 8.5;
+	test.out = -1;
+	test.services = 4;
+	array_events[5] = test;
+
+	// test.in = 7;
+	// test.out = -1;
+	// test.services = 5.4;
+	// array_events[6] = test;
+
+	// test.in = 8;
+	// test.out = -1;
+	// test.services = 3;
+	// array_events[7] = test;
+
+	// test.in = 9;
+	// test.out = -1;
+	// test.services = 9;
+	// array_events[8] = test;
+
+	// test.in = 10;
+	// test.out = -1;
+	// test.services = 1;
+	// array_events[9] = test;
 
 
 	timer = 0;
