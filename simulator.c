@@ -1,209 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+#include "queue_and_list.h"
 
 float timer;
 int number_server;
 
-typedef struct ev{
-	// structure for a single event
-	float in;
-	float out;
-	float services;
-	char* name;
-}Event;
-
-
-// <List class="List-of-next-event">
-
-typedef struct N_L{
-	Event info;
-	N_L* next;
-}NodeNE;
-
-typedef struct L { // queue of events waiting for a server
-	int lenght;
-	NodeNE* node; //list of out event
-	Event in;	//represente the in event
-}List;
-
-// </List>
-
-
-
-// <Queue class="Waiting-server">
-
-typedef struct N_Q{
-	Event info;
-	N_Q* next;
-}Node;
-
-typedef struct Q { // queue of events waiting for a server
-	int lenght;
-	Node* node;
-}Queue;
-
-// </Queue>
-
-
-
-
 Event pe[10]; // list with events for model an event with her in/out time
 Event array_events[10]; //list of initial events
-
-
-
-
-
-
-// Method of Queue
-
-void enqueue (Queue* q, Event ele){
-	Node *aux;
-	aux = (Node *) malloc(sizeof(Node));
-	aux->info = ele;
-	if (q->lenght == 0){
-		aux->next = NULL;
-	}else{
-		aux->next =q->node;
-	}
-	q->node = aux;
-	q->lenght++;
-}
-
-Event dequeue(Queue* q){
-	Event aux_info;
-	Node *aux = q->node;
-	Node *destroyed;
-
-	if (q->lenght == 1){
-		aux_info = aux->info;
-		q->node = NULL;
-		q->lenght = 0;
-		free(aux);
-	}
-
-	if(q->lenght > 1){
-		while(aux->next->next != NULL){
-			aux = aux->next;
-		}
-		destroyed = aux->next;
-		aux->next = NULL;
-		aux_info = destroyed->info;
-		q->lenght--;
-		free(destroyed);
-
-	}
-	return  aux_info;
-}
-
-void show_q (Queue* q){
-	Node *aux = q->node;
-	if (aux != NULL)
-		while(aux->next != NULL){
-			// printf("%d\n",aux->info);
-			aux = aux->next;
-		}
-		// printf("%d\n",aux->info);
-}
-
-int is_empty_q(Queue* q){
-	return	(q->lenght == 0)? 0 : 1;
-}
-
-
-// End of Method of Queue
-
-
-// Method of Lsist
-void insert (List* l, Event ele, int in_out){
-	/*
-		in_out == 0 (is an in-put event)
-		in_out == 1 (is an out-put event)
-	*/
-	if (in_out == 0){
-		l->in = ele;
-	}
-
-
-	if (in_out == 1){
-		NodeNE *aux;
-		aux = (NodeNE *) malloc(sizeof(NodeNE));
-		aux->info = ele;
-
-		NodeNE *walker;
-		walker = l->node;
-
-		if (l->lenght == 0){
-			aux->next = NULL;
-			l->node = aux;
-		}else{
-
-			if (ele.out < (walker->info).out){
-				aux->next = walker;
-				l->node = aux;
-			}else{
-
-				while(ele.out > (walker->info).out && walker->next != NULL){
-					walker = walker->next;
-				}
-
-				aux->next = walker->next;
-				walker->next = aux;
-			}
-		}
-		l->lenght++;
-	}
-}
-
-Event del (List* l){
-	Event aux_info;
-
-	NodeNE *aux = l->node;
-
-	NodeNE *destroyed;
-
-	if(l->lenght == 0){
-		aux_info = l->in;
-		(l->in).in = -1;
-		return aux_info;
-
-	}
-
-	if((l->in).in == -1){
-		aux_info = aux->info;
-		l->node = (l->node)->next;
-		l->lenght--;
-		free(aux);
-		return  aux_info;
-	}
-
-	if((l->in).in < (aux->info).out && (l->in).in > 0){
-		aux_info = l->in;
-		(l->in).in = -1;
-	}else{
-		aux_info = aux->info;
-		l->node = (l->node)->next;
-		l->lenght--;
-		free(aux);
-	}
-	return  aux_info;
-}
-
-void show_l (List* l){
-	NodeNE *aux = l->node;
-	if (aux != NULL)
-		while(aux->next != NULL){
-			printf("%f \n",(aux->info).out);
-			aux = aux->next;
-		}
-		printf("%f \n",(aux->info).out);
-}
-
-int is_empty_l (List* l){
-	return	(l->lenght == 0 && (l->in).in == -1)? 0 : 1;
-}
-// End of Method of Lsist
 
 void input (Queue* queue, Event e, List* list,float timer){
 	// do all thing when arrive an event (move the event to the server or move the event at queue if the server is full)
@@ -290,47 +93,47 @@ int main(int argc, char const *argv[]){
 	test.out = -1;
 	test.services = 2;
 	array_events[0] = test;
-	
+
 	test.in = 2;
 	test.out = -1;
 	test.services = 3.4;
 	array_events[1] = test;
-	
+
 	test.in = 3;
 	test.out = -1;
 	test.services = 1;
 	array_events[2] = test;
-	
+
 	test.in = 4;
 	test.out = -1;
 	test.services = 2.5;
 	array_events[3] = test;
-	
+
 	test.in = 5;
 	test.out = -1;
 	test.services = 2;
 	array_events[4] = test;
-	
+
 	test.in = 6;
 	test.out = -1;
 	test.services = 6;
 	array_events[5] = test;
-	
+
 	test.in = 7;
 	test.out = -1;
 	test.services = 5.4;
 	array_events[6] = test;
-	
+
 	test.in = 8;
 	test.out = -1;
 	test.services = 3;
 	array_events[7] = test;
-	
+
 	test.in = 9;
 	test.out = -1;
 	test.services = 9;
 	array_events[8] = test;
-	
+
 	test.in = 10;
 	test.out = -1;
 	test.services = 1;
