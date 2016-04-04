@@ -1,56 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+#include "queue_and_list.h"
 
 float timer;
 int number_server;
 
-typedef struct ev{
-	// structure for a single event
-	float in;
-	float out;
-	float services;
-	char* name;
-}Event;
-
-
-// <List class="List-of-next-event">
-
-typedef struct N_L{
-	Event info;
-	N_L* next;
-}NodeNE;
-
-typedef struct L { // queue of events waiting for a server
-	int lenght;
-	NodeNE* node; //list of out event
-	Event in;	//represente the in event
-}List;
-
-// </List>
-
-
-
-// <Queue class="Waiting-server">
-
-typedef struct N_Q{
-	Event info;
-	N_Q* next;
-}Node;
-
-typedef struct Q { // queue of events waiting for a server
-	int lenght;
-	Node* node;
-}Queue;
-
-// </Queue>
-
-
-
-
 Event pe[10]; // list with events for model an event with her in/out time
 Event array_events[10]; //list of initial events
 
+<<<<<<< HEAD
 
 
 
@@ -314,47 +272,47 @@ int main(int argc, char const *argv[]){
 	test.out = -1;
 	test.services = 2;
 	array_events[0] = test;
-	
+
 	test.in = 2;
 	test.out = -1;
 	test.services = 3.4;
 	array_events[1] = test;
-	
+
 	test.in = 3;
 	test.out = -1;
 	test.services = 1;
 	array_events[2] = test;
-	
+
 	test.in = 4;
 	test.out = -1;
 	test.services = 2.5;
 	array_events[3] = test;
-	
+
 	test.in = 5;
 	test.out = -1;
 	test.services = 2;
 	array_events[4] = test;
-	
+
 	test.in = 6;
 	test.out = -1;
 	test.services = 6;
 	array_events[5] = test;
-	
+
 	test.in = 7;
 	test.out = -1;
 	test.services = 5.4;
 	array_events[6] = test;
-	
+
 	test.in = 8;
 	test.out = -1;
 	test.services = 3;
 	array_events[7] = test;
-	
+
 	test.in = 9;
 	test.out = -1;
 	test.services = 9;
 	array_events[8] = test;
-	
+
 	test.in = 10;
 	test.out = -1;
 	test.services = 1;
