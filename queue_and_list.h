@@ -106,25 +106,39 @@ void insert (List* l, Event ele, int in_out){
     NodeNE *walker;
     walker = l->node;
 
-    NodeNE *punt_aux;
-    punt_aux = l->node;
-
     if (l->lenght == 0){
       aux->next = NULL;
       l->node = aux;
     }else{
+      int flag = 0;
 
       if (ele.out < (walker->info).out){
         aux->next = walker;
         l->node = aux;
-      }else{
-        while(ele.out > (walker->info).out && walker->next != NULL){
-          punt_aux = walker;
+        flag--;
+      }
+
+      if(ele.out > (walker->info).out && flag == 0){
+        if(walker->next == NULL){
+          walker->next = aux;
+          aux->next = NULL;
+          flag--;
+        }
+
+        if((walker->next)->info.out > ele.out){
+          aux->next = walker->next;
+          walker->next = aux;
+          flag--;
+        }
+
+      }
+      if(flag == 0){
+        while(ele.out > (walker->info).out && walker->next != NULL ){
           walker = walker->next;
         }
 
-        aux->next = punt_aux;
-        punt_aux->next = aux;
+        aux->next = walker->next;
+        walker->next = aux;
       }
     }
     l->lenght++;
