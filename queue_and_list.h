@@ -8,6 +8,7 @@ typedef struct ev{
   float out;
   float services;
   char* name;
+  float queue_time;
 }Event;
 
 typedef struct N_Q{// <Queue class="Waiting-server">
@@ -63,16 +64,13 @@ void show_q (Queue* q){
   Node *aux = q->node;
   if (aux != NULL)
     while(aux->next != NULL){
-      // printf("%d\n",aux->info);
       aux = aux->next;
     }
-    // printf("%d\n",aux->info);
 }
 
 int is_empty_q(Queue* q){
   return  (q->lenght == 0)? 0 : 1;
 }
-
 
 // End of Method of Queue
 
