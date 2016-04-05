@@ -63,7 +63,7 @@ void simulate(float timer){
 	list->in = a;
 
 	// initialize all variables
-	number_server = 1;
+	number_server = 3;
 	int i = 0;
 	Event e = array_events[i];
 	insert(list, e, 0);
@@ -78,7 +78,7 @@ void simulate(float timer){
 
 		if (e.out == -1){
 			// printf("Clock = %f      Soy un evento de Entrada\n", timer );
-			timer = timer + e.in;
+			timer = e.in;
 			input(queue, e, list,timer);
 			i++;
 			insert(list, array_events[i], 0);

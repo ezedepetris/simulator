@@ -184,6 +184,7 @@ void show_l (List* l){
   if(l->lenght == 0){
     printf("Evento de entrada timer: %f\n", (l->in).in);
   }else{
+    printf("Evento de entrada timer: %f\n", (l->in).in);
     while(aux != NULL){
       printf("Evento de salida timer: %f\n", (aux->info).out);
       aux = aux->next;
