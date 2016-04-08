@@ -1,0 +1,17 @@
+Trabajo Practico: Simulador
+Depetris - Massimino
+
+En el mail se encontrarar varios archivos, uno es el respectivo "READ_ME", tenemos dos librerias que son queue_and_list.h y lcgrand.h, y por ultimo, un archivo o codigo fuente que es simulator.c
+
+Lo primero que hay que hacer es darle permiso al script con el siguiente comando
+
+  chmod 777 /"ruta del script"
+
+y luego correr el script para que nos genere el ejecutable y lo corra
+
+  ./script.sh
+
+Al iniciar el programa, vamos a tener que pasarle tres parametros para que el programa corra la simulacion.
+El primer parametro es la cantidad de servidores que queremos
+El segundo es el tiempo de la simulacion
+El tercero es la distribucion que usaremos
