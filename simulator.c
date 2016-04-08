@@ -91,25 +91,48 @@ float laundry_distribution(){
 	float value,x;
 	/*
 		here we are going to call the fuction of lcgrand and
-		return on X the probability beetwen 0 and 1 and we choise 
+		return in X the probability beetwen 0 and 1 and we choise 
 		the correct option for that probability and, return that value
-		x = lcgrand( (<an_int>) maybe and int could be the seed
+		x = lcgrand( (<an_int>) maybe an_int could be the seed
 	*/
-	if(0 <= x && x >= 0.05)
+		x = lcgrand(1);
+
+	if(0 <= x && x <= 0.05)
 		value = 5;
-	if(0.05 < x && x>= 0.1)
+	if(0.05 < x && x<= 0.1)
 		value = 10;
-	if(0.1< x && x >= 0.2)
+	if(0.1< x && x <= 0.2)
 		value = 15;
-	if(0.2< x && x >= 0.3)
+	if(0.2< x && x <= 0.3)
 		value = 20;
-	if(0.3< x && x >= 0.6)
+	if(0.3< x && x <= 0.6)
 		value = 25;
-	if(0.6< x && x >= 0.8)
+	if(0.6< x && x <= 0.8)
 		value = 30;
-	if(0.8< x && x >=0.95)
+	if(0.8< x && x <=0.95)
 		value = 35;
-	if(0.95< x && x >= 1)
+	if(0.95< x && x <= 1)
+		value = 40;
+	
+	return value;
+}
+float laundry_distribution_services(){
+	float value,x;
+	/*
+		here we are going to call the fuction of lcgrand and
+		return in X the probability beetwen 0 and 1 and we choise 
+		the correct option for that probability and, return that value
+		x = lcgrand( (<an_int>) maybe an_int could be the seed
+	*/
+		x = lcgrand(4);
+
+	if(0 <= x && x <= 0.15)
+		value = 10;
+	if(0.05 < x && x<= 0.25)
+		value = 20;
+	if(0.1< x && x <= 0.4)
+		value = 30;
+	if(0.2< x && x <= 0.2)
 		value = 40;
 	
 	return value;
@@ -134,6 +157,26 @@ float input_distribution(){
 	return value;
 }
 
+float services_distribution(){
+	float value;
+	switch (opt){
+
+		case 1:
+
+			break;
+
+		case 2:
+			value = laundry_distribution_services();
+			break;
+
+		case 3:
+
+			break;
+	}
+	return value;
+}
+
+
 int end_simulation(Queue* q, List* l){
 	return (is_empty_q(q)==0 &&  is_empty_l(l)==0)? 0: 1;
 }
@@ -157,10 +200,10 @@ void simulate(float last_arrive){
 	Event e = array_events[i];
 	insert(list, e, 0);
 
-	while(end_simulation(queue, list) != 0 || timer< limited_time){//not end simulation
+	while(end_simulation(queue, list) != 0 && timer< limited_time){//not end simulation
 		Event aux;
 
-		//show_l(list);
+		show_l(list);
 		e = del(list);
 		if (e.out == -1){
 			timer = e.in;
@@ -170,8 +213,9 @@ void simulate(float last_arrive){
 				here we create an event when we need one
 			*/
 			aux.in = last_arrive + input_distribution(); // this calculate the inter arrives
+			last_arrive = aux.in;
 			aux.out = -1;
-			aux.services = 2.5; // here we need another distribution for the services
+			aux.services = services_distribution(); // here we need another distribution for the services
 			insert(list, aux, 0);
 		}
 		else{
@@ -187,6 +231,7 @@ void simulate(float last_arrive){
 int main(int argc, char const *argv[]){
 	printf("Ingrese la distribucion elegida\n1: Nose\n2: El Lavadero\n3: Pepe y Carlo\n");
 	scanf("%d", &opt);
+	printf(" option %d\n", opt);
 
 	float arrive = input_distribution();
 
@@ -194,14 +239,13 @@ int main(int argc, char const *argv[]){
 
 	first.in = arrive;
 	first.out = -1;
-	first.services = 2.5;// here we need another distribution for the time service of the event
+	first.services = services_distribution();// here we need another distribution for the time service of the event
 
 	array_events[0] = first;
 
-	limited_time = 100;// we need to give this value for run the simulate exactly limited_time.to_second
+	limited_time = 18000;// we need to give this value for run the simulate exactly limited_time.to_second
 
 	timer = 0;
 	simulate(arrive);
-	//report(timer);
 	return 0;
 }

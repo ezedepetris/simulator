@@ -179,12 +179,20 @@ void show_l (List* l){
   NodeNE *aux = l->node;
   if(l->lenght == 0){
     printf("Evento de entrada timer: %f\n", (l->in).in);
+    printf("\n");
+    printf("\n");
+    printf("\n");
+    printf("\n");
   }else{
     printf("Evento de entrada timer: %f\n", (l->in).in);
     while(aux != NULL){
       printf("Evento de salida timer: %f\n", (aux->info).out);
       aux = aux->next;
     }
+    printf("\n");
+    printf("\n");
+    printf("\n");
+    printf("\n");
   }
 }
 
