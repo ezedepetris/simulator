@@ -3,7 +3,7 @@
 #include "queue_and_list.h"
 
 float timer;
-int number_server = 1;
+int number_server = 3;
 int free_server = number_server;
 
 Event pe[10]; // list with events for model an event with her in/out time
@@ -31,8 +31,9 @@ void input (Queue* queue, Event e, List* list,float timer){
 	// do all thing when arrive an event (move the event to the server or move the event at queue if the server is full)
 	if (free_server == 0){
 		float queue_aux = (timer + time_event) * queue->lenght;
+		float server_aux = (timer - time_event) * (number_server - free_server);
 		enqueue(queue, e);
-		update(queue_aux,number_server,queue->lenght,0);
+		update(queue_aux,server_aux,queue->lenght,0);
 	}
 	else{
 		float server_aux = (timer - time_event) * (number_server - free_server);
@@ -48,8 +49,9 @@ void output (Queue* queue, List* list,float timer){
 	if (is_empty_q(queue) == 1){
 		Event e;
 		float queue_aux = (timer + time_event) * queue->lenght;
+		float server_aux = (timer - time_event) * (number_server - free_server);
 		e = dequeue(queue);
-		update(queue_aux,0,queue->lenght,0);
+		update(queue_aux,server_aux,queue->lenght,0);
 		e.out = timer + e.services;
 		insert(list, e, 1);
 	}
@@ -62,10 +64,6 @@ void output (Queue* queue, List* list,float timer){
 
 void report(int cant){
 	// interprate all stadistic variables and return a visual result
-	printf("numero cola promedio %f\n", avg_number_queue);
-	printf("timer %f\n", timer);
-	printf("numero server %d\n", number_server);
-	printf("\n");
 	avg_time_queue = avg_time_queue / cant;
 	avg_number_queue = avg_number_queue / timer;
 	avg_number_server = avg_number_server / (timer * number_server);
