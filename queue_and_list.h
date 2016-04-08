@@ -7,8 +7,6 @@ typedef struct ev{
   float in;
   float out;
   float services;
-  char* name;
-  float queue_time;
 }Event;
 
 typedef struct N_Q{// <Queue class="Waiting-server">
