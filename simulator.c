@@ -229,7 +229,7 @@ void simulate(float last_arrive){
 
 
 int main(int argc, char const *argv[]){
-	printf("Ingrese la distribucion elegida\n1: Nose\n2: El Lavadero\n3: Pepe y Carlo\n");
+	printf("Ingrese la distribucion elegida\n1: Exponencial\n2: El Lavadero\n3: Poisson\n");
 	scanf("%d", &opt);
 	printf(" option %d\n", opt);
 
