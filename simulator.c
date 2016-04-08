@@ -18,13 +18,15 @@ float avg_time_queue = 0;
 float avg_number_server = 0;
 float avg_number_queue = 0;
 float avg_timer_commerce = 0;
+float avg_number_commerce = 0;
 
-void update(float number_queue, float number_server, float time_queue, float time_server){
+void update(float number_queue, float number_server, float time_queue, float time_server, float commerce){
 	// update stadistic variables
 	avg_number_queue += number_queue;
 	avg_number_server += number_server;
 	avg_time_queue += time_queue;
 	avg_time_server += time_server;
+	avg_number_commerce += commerce;
 }
 
 void input (Queue* queue, Event e, List* list,float timer){
@@ -32,33 +34,37 @@ void input (Queue* queue, Event e, List* list,float timer){
 	if (free_server == 0){
 		float queue_aux = (timer + time_event) * queue->lenght;
 		float server_aux = (timer - time_event) * (number_server - free_server);
+		float commerce_aux = (timer - time_event) * (queue->lenght+(number_server - free_server));
 		enqueue(queue, e);
-		update(queue_aux,server_aux,queue->lenght,0);
+		update(queue_aux,server_aux,queue->lenght,0,commerce_aux);
 	}
 	else{
 		float server_aux = (timer - time_event) * (number_server - free_server);
+		float commerce_aux = (timer - time_event) * (queue->lenght+(number_server - free_server));
 		free_server--;
 		e.out = timer + e.services;
 		insert(list, e, 1);
-		update(0,server_aux,queue->lenght,e.services);
+		update(0,server_aux,queue->lenght,e.services,commerce_aux);
 	}
 }
 
 void output (Queue* queue, List* list,float timer){
 	// less 1 the server list if the queue is empty or put the next event of the queue to the server
 	if (is_empty_q(queue) == 1){
-		Event e;
 		float queue_aux = (timer + time_event) * queue->lenght;
 		float server_aux = (timer - time_event) * (number_server - free_server);
+		float commerce_aux = (timer - time_event) * (queue->lenght+(number_server - free_server));
+		Event e;
 		e = dequeue(queue);
-		update(queue_aux,server_aux,queue->lenght,0);
+		update(queue_aux,server_aux,queue->lenght,0,commerce_aux);
 		e.out = timer + e.services;
 		insert(list, e, 1);
 	}
 	else{
-		free_server++;
+		float commerce_aux = (timer - time_event) * (queue->lenght+(number_server - free_server));
 		float server_aux = (timer - time_event) * (number_server - free_server);
-		update(0,server_aux,queue->lenght,0);
+		free_server++;
+		update(0,server_aux,queue->lenght,0,commerce_aux);
 	}
 }
 
@@ -69,10 +75,11 @@ void report(int cant){
 	avg_number_server = avg_number_server / (timer * number_server);
 	avg_time_server = avg_time_server / cant;
 	avg_timer_commerce = avg_time_server + avg_time_queue;
+	avg_number_commerce = avg_number_commerce / timer;
 	printf("Utilizacion de la maquina lavadora de autos %f\n", avg_number_server);
 	printf("Tiempo promedio que un cliente pasa en el comercio %f\n", avg_timer_commerce);
 	printf("Tiempo promedio de un cliente en la cola %f\n", avg_time_queue);
-	//printf("Numero promedio de clientes en el comercio %f\n", );
+	printf("Numero promedio de clientes en el comercio %f\n", avg_number_commerce);
 	printf("Numero promedio de clientes en la cola %f\n", avg_number_queue);
 }
 
