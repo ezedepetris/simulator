@@ -1,8 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "queue_and_list.h"
+#include "lcgrand.h"
 
+
+int opt; // option to select the input distribution
 float timer;
+float limited_time; // this variable refine the timer, it's for run the simulator just an specyfic time
 int number_server = 3;
 int free_server = number_server;
 
@@ -76,11 +80,58 @@ void report(int cant){
 	printf("Numero promedio de clientes en la cola %f\n", avg_number_queue);
 }
 
+float laundry_distribution(){
+	float value,x;
+	/*
+		here we are going to call the fuction of lcgrand and
+		return on X the probability beetwen 0 and 1 and we choise 
+		the correct option for that probability and, return that value
+		x = lcgrand( (<an_int>) maybe and int could be the seed
+	*/
+	if(0 <= x && x >= 0.05)
+		value = 5;
+	if(0.05 < x && x>= 0.1)
+		value = 10;
+	if(0.1< x && x >= 0.2)
+		value = 15;
+	if(0.2< x && x >= 0.3)
+		value = 20;
+	if(0.3< x && x >= 0.6)
+		value = 25;
+	if(0.6< x && x >= 0.8)
+		value = 30;
+	if(0.8< x && x >=0.95)
+		value = 35;
+	if(0.95< x && x >= 1)
+		value = 40;
+	
+	return value;
+}
+
+float input_distribution(){
+	float value;
+	switch (opt){
+
+		case 1:
+
+			break;
+
+		case 2:
+			value = laundry_distribution();
+			break;
+
+		case 3:
+
+			break;
+	}
+	return value;
+}
+
 int end_simulation(Queue* q, List* l){
 	return (is_empty_q(q)==0 &&  is_empty_l(l)==0)? 0: 1;
 }
 
-void simulate(){
+void simulate(float last_arrive){
 	// initialize Queue
 	Queue *queue;
 	queue = (Queue*) malloc(sizeof(Queue));
@@ -99,14 +150,22 @@ void simulate(){
 	Event e = array_events[i];
 	insert(list, e, 0);
 
-	while(end_simulation(queue, list) != 0){//not end simulation
+	while(end_simulation(queue, list) != 0 || timer< limited_time){//not end simulation
+		Event aux;
+
 		//show_l(list);
 		e = del(list);
 		if (e.out == -1){
 			timer = e.in;
 			input(queue, e, list,timer);
 			i++;
-			insert(list, array_events[i], 0);
+			/*
+				here we create an event when we need one
+			*/
+			aux.in = last_arrive + input_distribution(); // this calculate the inter arrives
+			aux.out = -1;
+			aux.services = 2.5; // here we need another distribution for the services
+			insert(list, aux, 0);
 		}
 		else{
 			if (list->in.in != -1)
@@ -119,40 +178,23 @@ void simulate(){
 
 
 int main(int argc, char const *argv[]){
-	Event test;
+	printf("Ingrese la distribucion elegida\n1: Nose\n2: El Lavadero\n3: Pepe y Carlo\n");
+	scanf("%d", &opt);
 
-	test.in = 1;
-	test.out = -1;
-	test.services = 2.5;
-	array_events[0] = test;
+	float arrive = input_distribution();
 
-	test.in = 2;
-	test.out = -1;
-	test.services = 3;
-	array_events[1] = test;
+	Event first;
 
-	test.in = 4;
-	test.out = -1;
-	test.services = 2.3;
-	array_events[2] = test;
+	first.in = arrive;
+	first.out = -1;
+	first.services = 2.5;// here we need another distribution for the time service of the event
 
-	test.in = 5;
-	test.out = -1;
-	test.services = 1.8;
-	array_events[3] = test;
+	array_events[0] = first;
 
-	test.in = 7;
-	test.out = -1;
-	test.services = 1;
-	array_events[4] = test;
-
-	test.in = 8.5;
-	test.out = -1;
-	test.services = 4;
-	array_events[5] = test;
+	limited_time = 100;// we need to give this value for run the simulate exactly limited_time.to_second
 
 	timer = 0;
-	simulate();
+	simulate(arrive);
 	//report(timer);
 	return 0;
 }
