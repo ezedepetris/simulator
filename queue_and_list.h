@@ -11,7 +11,7 @@ typedef struct ev{
 
 typedef struct N_Q{// <Queue class="Waiting-server">
   Event info;
-  N_Q* next;
+  struct N_Q* next;
 }Node;
 
 typedef struct Q { // queue of events waiting for a server
@@ -74,7 +74,7 @@ int is_empty_q(Queue* q){
 
 typedef struct N_L{
   Event info;
-  N_L* next;
+  struct N_L* next;
 }NodeNE;
 
 typedef struct L { // queue of events waiting for a server

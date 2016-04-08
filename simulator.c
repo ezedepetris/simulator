@@ -7,11 +7,10 @@
 int opt; // option to select the input distribution
 float timer;
 float limited_time; // this variable refine the timer, it's for run the simulator just an specyfic time
-int number_server = 3;
-int free_server = number_server;
+int number_server;
+int free_server;
 
-Event pe[10]; // list with events for model an event with her in/out time
-Event array_events[10]; //list of initial events
+Event array_events[1]; //list of initial events
 
 //time of the last event
 float time_event = 0;
@@ -197,7 +196,7 @@ void simulate(float last_arrive){
 
 	// initialize all variables
 	int i = 0;
-	Event e = array_events[i];
+	Event e = array_events[0];
 	insert(list, e, 0);
 
 	while(end_simulation(queue, list) != 0 && timer< limited_time){//not end simulation
@@ -229,9 +228,15 @@ void simulate(float last_arrive){
 
 
 int main(int argc, char const *argv[]){
+	printf("Ingrese la cantidad de servidores con los que quiere correr la simulacion\n");
+	scanf("%d", &number_server);
+	free_server = number_server;
+
+	printf("Ingrese el tiempo en segundos que quiere que la simulacion se ejecute\n");
+	scanf("%f", &limited_time);
+
 	printf("Ingrese la distribucion elegida\n1: Exponencial\n2: El Lavadero\n3: Poisson\n");
 	scanf("%d", &opt);
-	printf(" option %d\n", opt);
 
 	float arrive = input_distribution();
 
@@ -242,8 +247,6 @@ int main(int argc, char const *argv[]){
 	first.services = services_distribution();// here we need another distribution for the time service of the event
 
 	array_events[0] = first;
-
-	limited_time = 18000;// we need to give this value for run the simulate exactly limited_time.to_second
 
 	timer = 0;
 	simulate(arrive);
